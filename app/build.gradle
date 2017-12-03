@@ -1,6 +1,6 @@
 import com.android.builder.core.BuilderConstants
 
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 23
@@ -35,7 +35,7 @@ android {
         hiddenapi.preBuild << {
             def hiddenapiCompiler = hiddenapi.android.libraryVariants[0].javaCompiler
             def hiddenapiDestPath = hiddenapiCompiler.destinationDir.getAbsolutePath()
-            applicationVariants.all { variant ->
+            libraryVariants.all { variant ->
                 variant.javaCompiler.with {
                     dependsOn hiddenapiCompiler
                     options.bootClasspath = hiddenapiDestPath + File.pathSeparator + options.bootClasspath
@@ -167,3 +167,14 @@ task fixIml {
 }
 
 tasks.preBuild.dependsOn fixIml
+
+apply plugin: 'com.novoda.bintray-release'
+
+publish {
+    userOrg = 'twsxtd'//
+    groupId = "me.weishu.exposed"
+    artifactId = "exposed-xposedapi"
+    publishVersion = "0.3.0"
+    desc = 'Xposed Wrapper in non-root environment(The Xposed API)'
+    website = 'https://github.com/android-hacker/exposed'
+}
