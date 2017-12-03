@@ -201,50 +201,8 @@ public final class XposedBridge {
 	 * @see #hookAllConstructors
 	 */
 	public static XC_MethodHook.Unhook hookMethod(Member hookMethod, XC_MethodHook callback) {
-		if (!(hookMethod instanceof Method) && !(hookMethod instanceof Constructor<?>)) {
-			throw new IllegalArgumentException("Only methods and constructors can be hooked: " + hookMethod.toString());
-		} else if (hookMethod.getDeclaringClass().isInterface()) {
-			throw new IllegalArgumentException("Cannot hook interfaces: " + hookMethod.toString());
-		} else if (Modifier.isAbstract(hookMethod.getModifiers())) {
-			throw new IllegalArgumentException("Cannot hook abstract methods: " + hookMethod.toString());
-		}
-
-		boolean newMethod = false;
-		CopyOnWriteSortedSet<XC_MethodHook> callbacks;
-		synchronized (sHookedMethodCallbacks) {
-			callbacks = sHookedMethodCallbacks.get(hookMethod);
-			if (callbacks == null) {
-				callbacks = new CopyOnWriteSortedSet<>();
-				sHookedMethodCallbacks.put(hookMethod, callbacks);
-				newMethod = true;
-			}
-		}
-		callbacks.add(callback);
-
-		if (newMethod) {
-			Class<?> declaringClass = hookMethod.getDeclaringClass();
-			int slot;
-			Class<?>[] parameterTypes;
-			Class<?> returnType;
-			if (runtime == RUNTIME_ART) {
-				slot = 0;
-				parameterTypes = null;
-				returnType = null;
-			} else if (hookMethod instanceof Method) {
-				slot = getIntField(hookMethod, "slot");
-				parameterTypes = ((Method) hookMethod).getParameterTypes();
-				returnType = ((Method) hookMethod).getReturnType();
-			} else {
-				slot = getIntField(hookMethod, "slot");
-				parameterTypes = ((Constructor<?>) hookMethod).getParameterTypes();
-				returnType = null;
-			}
-
-			AdditionalHookInfo additionalInfo = new AdditionalHookInfo(callbacks, parameterTypes, returnType);
-			hookMethodNative(hookMethod, declaringClass, slot, additionalInfo);
-		}
-
-		return callback.new Unhook(hookMethod);
+		Class<?> exposedBridge = XposedHelpers.findClass("me.weishu.exposed.ExposedBridge", XposedBridge.class.getClassLoader());
+		return (XC_MethodHook.Unhook) XposedHelpers.callStaticMethod(exposedBridge, "hookMethod", hookMethod, callback);
 	}
 
 	/**
