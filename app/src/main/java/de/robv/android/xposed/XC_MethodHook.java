@@ -63,7 +63,7 @@ public abstract class XC_MethodHook extends XCallback {
 	/**
 	 * Wraps information about the method call and allows to influence it.
 	 */
-	public static final class MethodHookParam extends XCallback.Param {
+	public static class MethodHookParam extends XCallback.Param {
 		/** @hide */
 		@SuppressWarnings("deprecation")
 		public MethodHookParam() {
