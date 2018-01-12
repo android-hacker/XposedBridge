@@ -15,7 +15,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -27,7 +26,6 @@ import de.robv.android.xposed.XC_MethodHook.MethodHookParam;
 import de.robv.android.xposed.callbacks.XC_InitPackageResources;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
-import static de.robv.android.xposed.XposedHelpers.getIntField;
 import static de.robv.android.xposed.XposedHelpers.setObjectField;
 
 /**
@@ -422,8 +420,10 @@ public final class XposedBridge {
 		Class<?>[] parameterTypes;
 		Class<?> returnType;
 		if (runtime == RUNTIME_ART && (method instanceof Method || method instanceof Constructor)) {
-			parameterTypes = null;
-			returnType = null;
+			// parameterTypes = null;
+			// returnType = null;
+			Class<?> exposedBridge = XposedHelpers.findClass("me.weishu.exposed.ExposedBridge", XposedBridge.class.getClassLoader());
+			return XposedHelpers.callStaticMethod(exposedBridge, "invokeOriginalMethod", method, thisObject, args);
 		} else if (method instanceof Method) {
 			parameterTypes = ((Method) method).getParameterTypes();
 			returnType = ((Method) method).getReturnType();
