@@ -60,7 +60,7 @@ public final class XSharedPreferences implements SharedPreferences {
 	 * @param prefFileName The file name without ".xml".
 	 */
 	public XSharedPreferences(String packageName, String prefFileName) {
-		mFile = new File(Environment.getDataDirectory(), "data/" + packageName + "/shared_prefs/" + prefFileName + ".xml");
+		mFile = new File(Environment.getDataDirectory(), "data/io.va.exposed/virtual/data/user/0/" + packageName + "/shared_prefs/" + prefFileName + ".xml");
 		mFilename = mFile.getAbsolutePath();
 		startLoadFromDisk();
 	}
