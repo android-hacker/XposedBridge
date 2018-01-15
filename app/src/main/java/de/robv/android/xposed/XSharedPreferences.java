@@ -34,6 +34,15 @@ public final class XSharedPreferences implements SharedPreferences {
 	private long mLastModified;
 	private long mFileSize;
 
+	private static File sPackageBaseDirectory = null;
+
+	public static void setPackageBaseDirectory(File file) {
+		if (sPackageBaseDirectory != null) {
+			throw new IllegalStateException("you can only set package base dir once!");
+		}
+		sPackageBaseDirectory = file;
+	}
+
 	/**
 	 * Read settings from the specified file.
 	 * @param prefFile The file to read the preferences from.
@@ -60,7 +69,11 @@ public final class XSharedPreferences implements SharedPreferences {
 	 * @param prefFileName The file name without ".xml".
 	 */
 	public XSharedPreferences(String packageName, String prefFileName) {
-		mFile = new File(Environment.getDataDirectory(), "data/" + packageName + "/shared_prefs/" + prefFileName + ".xml");
+		if (sPackageBaseDirectory == null) {
+			mFile = new File(Environment.getDataDirectory(), "data/" + packageName + "/shared_prefs/" + prefFileName + ".xml");
+		} else {
+			mFile = new File(sPackageBaseDirectory, packageName + "/shared_prefs/" + prefFileName + ".xml");
+		}
 		mFilename = mFile.getAbsolutePath();
 		startLoadFromDisk();
 	}
