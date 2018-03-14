@@ -1,2 +1,1 @@
-*.java text
-*.xml text
+*.bat text eol=crlf
