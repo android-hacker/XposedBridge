@@ -37,7 +37,7 @@ public final class XSharedPreferences implements SharedPreferences {
 	private static File sPackageBaseDirectory = null;
 
 	public static void setPackageBaseDirectory(File file) {
-		if (sPackageBaseDirectory != null) {
+		if (sPackageBaseDirectory != null && !sPackageBaseDirectory.equals(file)) {
 			throw new IllegalStateException("you can only set package base dir once!");
 		}
 		sPackageBaseDirectory = file;
