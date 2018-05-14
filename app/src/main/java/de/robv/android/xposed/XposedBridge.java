@@ -11,7 +11,6 @@ import com.android.internal.os.ZygoteInit;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.AccessibleObject;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
@@ -417,14 +416,13 @@ public final class XposedBridge {
 			args = EMPTY_ARRAY;
 		}
 
+		Class<?> exposedBridge = XposedHelpers.findClass("me.weishu.exposed.ExposedBridge", XposedBridge.class.getClassLoader());
+		return XposedHelpers.callStaticMethod(exposedBridge, "invokeOriginalMethod", method, thisObject, args);
+
+		/*
 		Class<?>[] parameterTypes;
 		Class<?> returnType;
-		if (runtime == RUNTIME_ART && (method instanceof Method || method instanceof Constructor)) {
-			// parameterTypes = null;
-			// returnType = null;
-			Class<?> exposedBridge = XposedHelpers.findClass("me.weishu.exposed.ExposedBridge", XposedBridge.class.getClassLoader());
-			return XposedHelpers.callStaticMethod(exposedBridge, "invokeOriginalMethod", method, thisObject, args);
-		} else if (method instanceof Method) {
+		if (method instanceof Method) {
 			parameterTypes = ((Method) method).getParameterTypes();
 			returnType = ((Method) method).getReturnType();
 		} else if (method instanceof Constructor) {
@@ -435,6 +433,7 @@ public final class XposedBridge {
 		}
 
 		return invokeOriginalMethodNative(method, 0, parameterTypes, returnType, thisObject, args);
+		*/
 	}
 
 	/*package*/ static void setObjectClass(Object obj, Class<?> clazz) {
