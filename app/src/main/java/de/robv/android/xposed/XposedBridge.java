@@ -3,6 +3,7 @@ package de.robv.android.xposed;
 import android.annotation.SuppressLint;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.android.internal.os.RuntimeInit;
@@ -167,6 +168,9 @@ public final class XposedBridge {
 	 * @param text The log message.
 	 */
 	public synchronized static void log(String text) {
+		if (TextUtils.isEmpty(text)) {
+			return;
+		}
 		Log.i(TAG, text);
 	}
 
