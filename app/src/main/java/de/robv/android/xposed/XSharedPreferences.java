@@ -36,6 +36,13 @@ public final class XSharedPreferences implements SharedPreferences {
 
 	private static File sPackageBaseDirectory = null;
 
+	static {
+		if (System.getProperty("vxp") != null) {
+			// TODO: remove this dirty and fast solution.
+			sPackageBaseDirectory = new File("/data/user/0/io.va.exposed/virtual/data/user/0");
+		}
+	}
+
 	public static void setPackageBaseDirectory(File file) {
 		if (sPackageBaseDirectory != null && !sPackageBaseDirectory.equals(file)) {
 			throw new IllegalStateException("you can only set package base dir once!");

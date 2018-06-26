@@ -174,7 +174,7 @@ publish {
     userOrg = 'twsxtd'//
     groupId = "me.weishu.exposed"
     artifactId = "exposed-xposedapi"
-    publishVersion = "0.4.1"
+    publishVersion = "0.4.2"
     desc = 'Xposed Wrapper in non-root environment(The Xposed API)'
     website = 'https://github.com/android-hacker/exposed'
 }
