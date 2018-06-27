@@ -38,8 +38,7 @@ public final class XSharedPreferences implements SharedPreferences {
 
 	static {
 		if (System.getProperty("vxp") != null) {
-			// TODO: remove this dirty and fast solution.
-			sPackageBaseDirectory = new File("/data/user/0/io.va.exposed/virtual/data/user/0");
+			sPackageBaseDirectory = new File(System.getProperty("vxp_user_dir"));
 		}
 	}
 
