@@ -392,6 +392,19 @@ public final class XposedBridge {
 			throws IllegalAccessException, IllegalArgumentException, InvocationTargetException;
 
 	/**
+	 * Just for throw an checked exception without check
+	 *
+	 * @param exception The checked exception.
+	 * @param dummy     dummy.
+	 * @param <T>       fake type
+	 * @throws T the checked exception.
+	 */
+	@SuppressWarnings("unchecked")
+	private static <T extends Throwable> void throwNoCheck(Throwable exception, Object dummy) throws T {
+		throw (T) exception;
+	}
+
+	/**
 	 * Basically the same as {@link Method#invoke}, but calls the original method
 	 * as it was before the interception by Xposed. Also, access permissions are not checked.
 	 *
@@ -423,7 +436,16 @@ public final class XposedBridge {
 		}
 
 		Class<?> exposedBridge = XposedHelpers.findClass("me.weishu.exposed.ExposedBridge", XposedBridge.class.getClassLoader());
-		return XposedHelpers.callStaticMethod(exposedBridge, "invokeOriginalMethod", method, thisObject, args);
+		Method invokeOriginalMethod = XposedHelpers.findMethodExact(exposedBridge, "invokeOriginalMethod", Member.class, Object.class, Object[].class);
+		try {
+			return invokeOriginalMethod.invoke(null, method, thisObject, args);
+		} catch (InvocationTargetException e) {
+			Throwable cause = e.getCause();
+			if (cause != null) {
+				XposedBridge.<RuntimeException>throwNoCheck(cause, null);
+			}
+			throw e;
+		}
 
 		/*
 		Class<?>[] parameterTypes;
