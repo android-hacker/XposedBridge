@@ -157,7 +157,9 @@ public final class XposedBridge {
 	/**
 	 * Returns the currently installed version of the Xposed framework.
 	 */
-	public static native int getXposedVersion();
+	public static int getXposedVersion() {
+		return XPOSED_BRIDGE_VERSION;
+	};
 
 	/**
 	 * Writes a message to the Xposed error log.
